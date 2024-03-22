@@ -17,10 +17,10 @@
   },
   "require": {
     "php": "^8.3",
-    "nikic/php-parser": "5.0.2 as 4.19"
+    "nikic/php-parser": "^5.0"
   },
   "require-dev": {
-    "vimeo/psalm": "^5.23",
+    "vimeo/psalm": "dev-master",
     "friendsofphp/php-cs-fixer": "^3.52",
     "phpunit/phpunit": "^10.0"
   },
