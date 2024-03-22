@@ -1,0 +1,9 @@
+###> IDEs ###
+/.idea/
+###< IDEs ###
+
+###> Dependencies ###
+/vendor/
+/.php-cs-fixer.cache
+/.phpunit.cache/
+###< Dependencies ###
