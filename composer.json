@@ -1,42 +1,43 @@
 {
-    "name": "symblaze/mare-scan",
-    "description": "Mare Scan is a static PHP code analysis tool written in PHP",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "imdhemy",
-            "email": "imdhemy@gmail.com"
-        }
-    ],
-    "scripts": {
-        "test": "./vendor/bin/phpunit --testdox",
-        "psalm": "vendor/bin/psalm --no-cache",
-        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
-        "cs-fix": "php-cs-fixer fix --verbose"
-    },
-    "autoload": {
-        "psr-4": {
-            "Symblaze\\MareScan\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Symblaze\\MareScan\\Tests\\": "tests/"
-        }
-
-    },
-    "config": {
-        "platform": {
-            "php": "8.3"
-        }
-    },
-    "require-dev": {
-        "vimeo/psalm": "^5.23",
-        "friendsofphp/php-cs-fixer": "^3.52",
-        "phpunit/phpunit": "^10.0"
-    },
-    "require": {
-        "nikic/php-parser": "^4.19"
+  "name": "symblaze/mare-scan",
+  "description": "Mare Scan is a static PHP code analysis tool written in PHP",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "imdhemy",
+      "email": "imdhemy@gmail.com"
     }
+  ],
+  "scripts": {
+    "test": "./vendor/bin/phpunit --testdox",
+    "psalm": "vendor/bin/psalm --no-cache",
+    "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
+    "cs-fix": "php-cs-fixer fix --verbose"
+  },
+  "require": {
+    "php": "^8.3",
+    "nikic/php-parser": "^4.19"
+  },
+  "require-dev": {
+    "vimeo/psalm": "^5.23",
+    "friendsofphp/php-cs-fixer": "^3.52",
+    "phpunit/phpunit": "^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Symblaze\\MareScan\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Symblaze\\MareScan\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "8.3"
+    }
+  }
 }
