@@ -17,7 +17,7 @@
   },
   "require": {
     "php": "^8.3",
-    "nikic/php-parser": "^4.19"
+    "nikic/php-parser": "5.0.2 as 4.19"
   },
   "require-dev": {
     "vimeo/psalm": "^5.23",
