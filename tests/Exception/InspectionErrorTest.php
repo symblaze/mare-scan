@@ -8,6 +8,9 @@ use PHPUnit\Framework\Attributes\Test;
 use Symblaze\MareScan\Exception\InspectionError;
 use Symblaze\MareScan\Tests\TestCase;
 
+/**
+ * @covers \Symblaze\MareScan\Exception\InspectionError
+ */
 final class InspectionErrorTest extends TestCase
 {
     #[Test]

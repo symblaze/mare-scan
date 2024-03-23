@@ -10,6 +10,9 @@ use Symblaze\MareScan\Inspector\TypeCompatibility\MissingDeclareStrictTypesInspe
 use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\Tests\TestCase;
 
+/**
+ * @covers \Symblaze\MareScan\Inspector\TypeCompatibility\MissingDeclareStrictTypesInspector
+ */
 final class MissingDeclareStrictTypesInspectorTest extends TestCase
 {
     #[Test]

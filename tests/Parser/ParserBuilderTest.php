@@ -8,6 +8,9 @@ use PHPUnit\Framework\Attributes\Test;
 use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\Tests\TestCase;
 
+/**
+ * @covers \Symblaze\MareScan\Parser\ParserBuilder
+ */
 final class ParserBuilderTest extends TestCase
 {
     #[Test]
