@@ -40,15 +40,11 @@ README;
         }
 
         $declares = $this->stmt->declares;
-        if (! isset($declares[0])) {
+        if (! isset($declares[0]) || ! $declares[0] instanceof DeclareItem) {
             throw InspectionError::warning(self::MESSAGE);
         }
 
         $declaration = $declares[0];
-        if (! $declaration instanceof DeclareItem) {
-            throw InspectionError::warning(self::MESSAGE);
-        }
-
         if ('strict_types' !== $declaration->key->name) {
             throw InspectionError::warning(self::MESSAGE);
         }
