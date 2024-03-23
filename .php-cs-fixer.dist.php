@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->exclude('vendor');
+    ->exclude(['vendor', 'tests/fixtures']);
 
 $ruleSet = [
     '@Symfony' => true,

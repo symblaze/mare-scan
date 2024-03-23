@@ -11,4 +11,11 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
+    protected function fixture(string $path): string
+    {
+        $contents = file_get_contents(__DIR__.'/fixtures/'.$path);
+        assert(is_string($contents), 'Fixture not found.');
+
+        return $contents;
+    }
 }
