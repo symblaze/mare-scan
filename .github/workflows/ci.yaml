@@ -26,11 +26,11 @@ jobs:
         uses: ramsey/composer-install@v2
 
       # --------- Run steps ---------
-      - name: "Run tests"
+      - name: "Unit Tests"
         run: "composer test"
 
-      - name: "PHP CS Fixer"
+      - name: "Coding Style"
         run: "composer cs-fix"
 
-      - name: "Psalm"
+      - name: "Static code analysis"
         run: "composer psalm"
