@@ -119,16 +119,16 @@
         },
         {
             "name": "symblaze/console",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symblaze/console.git",
-                "reference": "792b5a34e958d9fc7794d3e54f612dd56b23b08a"
+                "reference": "dcab81ed639393b9084b941fcf1ac91fc77c7bca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symblaze/console/zipball/792b5a34e958d9fc7794d3e54f612dd56b23b08a",
-                "reference": "792b5a34e958d9fc7794d3e54f612dd56b23b08a",
+                "url": "https://api.github.com/repos/symblaze/console/zipball/dcab81ed639393b9084b941fcf1ac91fc77c7bca",
+                "reference": "dcab81ed639393b9084b941fcf1ac91fc77c7bca",
                 "shasum": ""
             },
             "require": {
@@ -160,9 +160,9 @@
             "description": "Fluent configuration for Symfony console",
             "support": {
                 "issues": "https://github.com/symblaze/console/issues",
-                "source": "https://github.com/symblaze/console/tree/1.1.0"
+                "source": "https://github.com/symblaze/console/tree/1.1.1"
             },
-            "time": "2024-03-29T00:22:12+00:00"
+            "time": "2024-04-06T14:00:44+00:00"
         },
         {
             "name": "symfony/console",
