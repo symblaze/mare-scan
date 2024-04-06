@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Tests;
 
+use Faker\Factory;
+use Faker\Generator;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 /**
@@ -11,6 +13,15 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
+    protected Generator $faker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->faker = Factory::create();
+    }
+
     protected function fixture(string $path): string
     {
         $contents = file_get_contents($this->fixturePath($path));
