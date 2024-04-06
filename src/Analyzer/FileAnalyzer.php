@@ -42,23 +42,23 @@ final readonly class FileAnalyzer implements AnalyzerInterface
         return [];
     }
 
-    private function parserErrorToResult(ParserError $e, string $filePath): array
+    private function parserErrorToResult(ParserError $e, string $filePath): Issue
     {
-        return [
+        return Issue::fromArray([
             'severity' => 'error',
             'message' => $e->getMessage(),
             'file' => $filePath,
             'description' => 'Parser error occurred while parsing the file',
-        ];
+        ]);
     }
 
-    private function inspectionErrorToResult(InspectionError $e, string $filePath, InspectorInterface $inspector): array
+    private function inspectionErrorToResult(InspectionError $e, string $filePath, InspectorInterface $inspector): Issue
     {
-        return [
+        return Issue::fromArray([
             'severity' => 'warning',
             'message' => $e->getMessage(),
             'file' => $filePath,
             'description' => $inspector->description(),
-        ];
+        ]);
     }
 }

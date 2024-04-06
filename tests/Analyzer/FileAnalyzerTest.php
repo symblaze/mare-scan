@@ -7,6 +7,7 @@ namespace Symblaze\MareScan\Tests\Analyzer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symblaze\MareScan\Analyzer\FileAnalyzer;
+use Symblaze\MareScan\Analyzer\Issue;
 use Symblaze\MareScan\Inspector\TypeCompatibility\MissingDeclareStrictTypesInspector;
 use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\Tests\TestCase;
@@ -28,12 +29,12 @@ final class FileAnalyzerTest extends TestCase
         $result = $sut->analyze($data);
 
         $expected = [
-            [
+            Issue::fromArray([
                 'severity' => 'error',
                 'description' => 'Parser error occurred while parsing the file',
                 'message' => 'Syntax error, unexpected T_ENCAPSED_AND_WHITESPACE on line 3',
                 'file' => $filePath,
-            ],
+            ]),
         ];
         $this->assertEqualsCanonicalizing($expected, $result);
     }
@@ -53,12 +54,12 @@ final class FileAnalyzerTest extends TestCase
 
         $inspector = new MissingDeclareStrictTypesInspector();
         $expected = [
-            [
+            Issue::fromArray([
                 'severity' => 'warning',
                 'message' => 'Strict types declaration is missing',
                 'file' => $filePath,
                 'description' => $inspector->description(),
-            ],
+            ]),
         ];
         $this->assertEqualsCanonicalizing($expected, $result);
     }
@@ -78,12 +79,12 @@ final class FileAnalyzerTest extends TestCase
 
         $inspector = new MissingDeclareStrictTypesInspector();
         $expected = [
-            [
+            Issue::fromArray([
                 'severity' => 'warning',
                 'message' => 'Strict types declaration is missing',
                 'file' => $filePath,
                 'description' => $inspector->description(),
-            ],
+            ]),
         ];
         $this->assertEqualsCanonicalizing($expected, $result);
     }
