@@ -47,7 +47,7 @@ final readonly class FileAnalyzer implements AnalyzerInterface
         return Issue::fromArray([
             'severity' => 'error',
             'message' => $e->getMessage(),
-            'file' => $filePath,
+            'file' => $this->unifyDirectorySeparator($filePath),
             'description' => 'Parser error occurred while parsing the file',
         ]);
     }
@@ -57,8 +57,13 @@ final readonly class FileAnalyzer implements AnalyzerInterface
         return Issue::fromArray([
             'severity' => 'warning',
             'message' => $e->getMessage(),
-            'file' => $filePath,
+            'file' => $this->unifyDirectorySeparator($filePath),
             'description' => $inspector->description(),
         ]);
+    }
+
+    private function unifyDirectorySeparator(string $path): string
+    {
+        return str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
     }
 }

@@ -35,6 +35,11 @@ abstract class TestCase extends PHPUnitTestCase
         $realpath = realpath(__DIR__.'/fixtures/'.$path);
         assert(is_string($realpath), 'Fixture not found.');
 
-        return $realpath;
+        return $this->unifyDirectorySeparator($realpath);
+    }
+
+    private function unifyDirectorySeparator(string $path): string
+    {
+        return str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
     }
 }
