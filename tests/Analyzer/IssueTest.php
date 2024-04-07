@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Tests\Analyzer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symblaze\MareScan\Analyzer\Issue;
 use Symblaze\MareScan\Tests\TestCase;
 
+#[CoversClass(Issue::class)]
 final class IssueTest extends TestCase
 {
     #[Test]

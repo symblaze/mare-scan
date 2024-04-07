@@ -48,5 +48,4 @@ final readonly class Issue
     {
         return $this->description;
     }
-
 }
