@@ -13,11 +13,11 @@ use Symblaze\MareScan\Analyzer\AnalyzerInterface;
 use Symblaze\MareScan\Analyzer\FileAnalyzer;
 use Symblaze\MareScan\Foundation\Config;
 use Symblaze\MareScan\Foundation\ConfigFinder;
+use Symblaze\MareScan\Foundation\Finder;
 use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\ScanCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Finder\Finder;
 
 #[CoversClass(ScanCommand::class)]
 final class ScanCommandTest extends TestCase
@@ -29,8 +29,7 @@ final class ScanCommandTest extends TestCase
         $output = $this->createMock(Output::class);
         $analyzer = $this->createMock(AnalyzerInterface::class);
         $configFinder = $this->createMock(ConfigFinder::class);
-        $config = new Config();
-        $config->setFinder($this->createMock(Finder::class));
+        $config = new Config($this->createMock(Finder::class));
         $configFinder->method('find')->willReturn($config);
         $sut = new ScanCommand($analyzer, $configFinder);
 
@@ -68,7 +67,7 @@ final class ScanCommandTest extends TestCase
             $files[] = new SplFileInfo($file);
         }
         $finder->method('getIterator')->willReturn(new ArrayIterator($files));
-        $config = (new Config())->setFinder($finder);
+        $config = new Config($finder);
         $configFinder->method('find')->willReturn($config);
         $sut = new ScanCommand($analyzer, $configFinder);
 
@@ -84,7 +83,7 @@ final class ScanCommandTest extends TestCase
         $output = $this->createMock(Output::class);
         $analyzer = $this->createMock(AnalyzerInterface::class);
         $configFinder = $this->createMock(ConfigFinder::class);
-        $config = (new Config())->setFinder($this->createMock(Finder::class));
+        $config = new Config($this->createMock(Finder::class));
         $configFinder->method('find')->willReturn($config);
         $sut = new ScanCommand($analyzer, $configFinder);
 
