@@ -10,11 +10,9 @@ use PHPUnit\Framework\Attributes\Test;
 use SplFileInfo;
 use Symblaze\Console\IO\Output;
 use Symblaze\MareScan\Analyzer\AnalyzerInterface;
-use Symblaze\MareScan\Analyzer\FileAnalyzer;
 use Symblaze\MareScan\Foundation\Config;
 use Symblaze\MareScan\Foundation\ConfigFinder;
 use Symblaze\MareScan\Foundation\Finder;
-use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\ScanCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,11 +25,10 @@ final class ScanCommandTest extends TestCase
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(Output::class);
-        $analyzer = $this->createMock(AnalyzerInterface::class);
         $configFinder = $this->createMock(ConfigFinder::class);
         $config = new Config($this->createMock(Finder::class));
         $configFinder->method('find')->willReturn($config);
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $output->expects(self::once())->method('info')->with('Mare scan is running...');
 
@@ -43,9 +40,8 @@ final class ScanCommandTest extends TestCase
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(Output::class);
-        $analyzer = $this->createMock(AnalyzerInterface::class);
         $configFinder = $this->createMock(ConfigFinder::class);
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $output->expects(self::once())->method('error')->with('No configuration file found');
 
@@ -67,9 +63,9 @@ final class ScanCommandTest extends TestCase
             $files[] = new SplFileInfo($file);
         }
         $finder->method('getIterator')->willReturn(new ArrayIterator($files));
-        $config = new Config($finder);
+        $config = new Config($finder, $analyzer);
         $configFinder->method('find')->willReturn($config);
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $analyzer->expects(self::exactly($filesCount))->method('analyze');
 
@@ -81,11 +77,10 @@ final class ScanCommandTest extends TestCase
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(Output::class);
-        $analyzer = $this->createMock(AnalyzerInterface::class);
         $configFinder = $this->createMock(ConfigFinder::class);
         $config = new Config($this->createMock(Finder::class));
         $configFinder->method('find')->willReturn($config);
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $output->expects(self::once())->method('success')->with('No issues found');
 
@@ -99,9 +94,8 @@ final class ScanCommandTest extends TestCase
         $input = $this->createMock(InputInterface::class);
         $input->method('getOption')->with('config')->willReturn($configPath);
         $output = $this->createMock(Output::class);
-        $analyzer = $this->createMock(AnalyzerInterface::class);
         $configFinder = new ConfigFinder();
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $status = $sut->run($input, $output);
 
@@ -115,9 +109,8 @@ final class ScanCommandTest extends TestCase
         $input = $this->createMock(InputInterface::class);
         $input->method('getOption')->with('config')->willReturn($configPath);
         $output = $this->createMock(Output::class);
-        $analyzer = new FileAnalyzer(ParserBuilder::init()->build());
         $configFinder = new ConfigFinder();
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $output->expects(self::once())->method('error')->with('Total issues found: 1');
 
@@ -131,9 +124,8 @@ final class ScanCommandTest extends TestCase
         $input = $this->createMock(InputInterface::class);
         $input->method('getOption')->with('config')->willReturn($configPath);
         $output = $this->createMock(Output::class);
-        $analyzer = new FileAnalyzer(ParserBuilder::init()->build());
         $configFinder = new ConfigFinder();
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $output->expects(self::once())->method('warning')->with(
             'error: Syntax error, unexpected T_ENCAPSED_AND_WHITESPACE on line 3'
@@ -149,9 +141,8 @@ final class ScanCommandTest extends TestCase
         $input = $this->createMock(InputInterface::class);
         $input->method('getOption')->with('config')->willReturn($configPath);
         $output = $this->createMock(Output::class);
-        $analyzer = new FileAnalyzer(ParserBuilder::init()->build());
         $configFinder = new ConfigFinder();
-        $sut = new ScanCommand($analyzer, $configFinder);
+        $sut = new ScanCommand($configFinder);
 
         $output->expects(self::exactly(2))->method('info')->with(
             $this->callback(function (string $message) {

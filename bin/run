@@ -3,9 +3,6 @@
 
 declare(strict_types=1);
 
-use Symblaze\MareScan\Analyzer\FileAnalyzer;
-use Symblaze\MareScan\Foundation\ConfigFinder;
-use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\ScanCommand;
 use Symfony\Component\Console\Application;
 
@@ -13,10 +10,6 @@ require __DIR__.'/../vendor/autoload.php';
 
 $application = new Application('Mare scan', '1.0.0');
 
-$fileAnalyzer = new FileAnalyzer(ParserBuilder::init()->build());
-$configFinder = new ConfigFinder();
-
-$scanCommand = new ScanCommand($fileAnalyzer, $configFinder);
-$application->add($scanCommand);
+$application->add(ScanCommand::create());
 
 $application->run();

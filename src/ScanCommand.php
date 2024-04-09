@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Symblaze\MareScan;
 
 use Symblaze\Console\Command;
-use Symblaze\MareScan\Analyzer\AnalyzerInterface;
 use Symblaze\MareScan\Analyzer\Issue;
 use Symblaze\MareScan\Foundation\Config;
 use Symblaze\MareScan\Foundation\ConfigFinder;
@@ -19,11 +18,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'scan {--config=}', description: 'Scan the project for potential issues')]
 final class ScanCommand extends Command
 {
-    public function __construct(
-        private readonly AnalyzerInterface $analyzer,
-        private readonly ConfigFinder $configFinder
-    ) {
+    public function __construct(private readonly ConfigFinder $configFinder)
+    {
         parent::__construct();
+    }
+
+    public static function create(): self
+    {
+        return new self(new ConfigFinder());
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -31,19 +33,19 @@ final class ScanCommand extends Command
         // Find Configuration
         $config = $this->findConfig();
         if (is_null($config)) {
-            $this->error('No configuration file found');
+            $this->output->error('No configuration file found');
 
             return self::FAILURE;
         }
 
         // Run the scan
-        $this->info('Mare scan is running...');
-        $this->line('');
+        $this->output->info('Mare scan is running...');
+        $this->output->newLine();
         $result = $this->scanFiles($config);
 
         // Display results
         if (empty($result)) {
-            $this->success('No issues found');
+            $this->output->success('No issues found');
 
             return self::SUCCESS;
         }
@@ -58,11 +60,12 @@ final class ScanCommand extends Command
     private function scanFiles(Config $config): array
     {
         $files = $config->getFinder()->getIterator();
+        $analyzer = $config->getAnalyzer();
         $result = [];
 
         foreach ($files as $file) {
             $path = $file->getPathname();
-            $result[] = $this->analyzer->analyze(compact('path'));
+            $result[] = $analyzer->analyze(compact('path'));
         }
 
         return $result;
@@ -87,15 +90,14 @@ final class ScanCommand extends Command
                 ++$issuesCount;
 
                 $title = $issue->severity().': '.$issue->message();
-                $this->warning($title);
+                $this->output->warning($title);
 
                 $at = 'at: '.$issue->file();
-                $this->info($at);
-
-                $this->line('');
+                $this->output->info($at);
+                $this->output->newLine();
             }
         }
 
-        $this->error("Total issues found: $issuesCount");
+        $this->output->error("Total issues found: $issuesCount");
     }
 }
