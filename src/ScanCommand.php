@@ -88,16 +88,21 @@ final class ScanCommand extends Command
         foreach ($result as $issues) {
             foreach ($issues as $issue) {
                 ++$issuesCount;
-
-                $title = $issue->severity().': '.$issue->message();
-                $this->output->warning($title);
-
-                $at = 'at: '.$issue->file();
-                $this->output->info($at);
-                $this->output->newLine();
+                $this->displayIssue($issue);
             }
         }
 
         $this->output->error("Total issues found: $issuesCount");
+    }
+
+    private function displayIssue(Issue $issue): void
+    {
+        $title = $issue->severity().': '.$issue->message();
+        $this->output->warning($title);
+
+        $at = 'at: '.$issue->file();
+        $this->output->info($at);
+
+        $this->output->newLine();
     }
 }
