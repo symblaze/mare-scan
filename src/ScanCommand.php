@@ -44,7 +44,7 @@ final class ScanCommand extends Command
         $result = $this->scanFiles($config);
 
         // Display results
-        if (empty($result)) {
+        if (empty($result[0] ?? [])) {
             $this->output->success('No issues found');
 
             return self::SUCCESS;
