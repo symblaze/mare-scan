@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Tests;
+namespace Symblaze\MareScan\Tests\Console;
 
 use ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -10,10 +10,11 @@ use PHPUnit\Framework\Attributes\Test;
 use SplFileInfo;
 use Symblaze\Console\IO\Output;
 use Symblaze\MareScan\Analyzer\AnalyzerInterface;
+use Symblaze\MareScan\Console\ScanCommand;
 use Symblaze\MareScan\Foundation\Config;
 use Symblaze\MareScan\Foundation\ConfigFinder;
 use Symblaze\MareScan\Foundation\Finder;
-use Symblaze\MareScan\ScanCommand;
+use Symblaze\MareScan\Tests\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 

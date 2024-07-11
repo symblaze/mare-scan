@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan;
+namespace Symblaze\MareScan\Console;
 
 use Symblaze\Console\Command;
 use Symblaze\MareScan\Analyzer\Issue;
