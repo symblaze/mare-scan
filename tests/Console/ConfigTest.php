@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Tests\Foundation;
+namespace Symblaze\MareScan\Tests\Console;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use Symblaze\MareScan\Foundation\Config;
-use Symblaze\MareScan\Foundation\Finder;
+use Symblaze\MareScan\Console\Config;
+use Symblaze\MareScan\Console\Finder;
 use Symblaze\MareScan\Tests\TestCase;
 
 #[CoversClass(Config::class)]

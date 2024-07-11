@@ -6,8 +6,6 @@ namespace Symblaze\MareScan\Console;
 
 use Symblaze\Console\Command;
 use Symblaze\MareScan\Analyzer\Issue;
-use Symblaze\MareScan\Foundation\Config;
-use Symblaze\MareScan\Foundation\ConfigFinder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

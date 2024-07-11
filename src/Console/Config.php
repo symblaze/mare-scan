@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Foundation;
+namespace Symblaze\MareScan\Console;
 
 use Symblaze\MareScan\Analyzer\AnalyzerInterface;
 use Symblaze\MareScan\Analyzer\FileAnalyzer;
@@ -36,7 +36,7 @@ final class Config
 
     public function getAnalyzer(): AnalyzerInterface
     {
-        if (! is_null($this->analyzer)) {
+        if (!is_null($this->analyzer)) {
             return $this->analyzer;
         }
 
