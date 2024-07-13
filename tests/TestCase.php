@@ -47,4 +47,9 @@ abstract class TestCase extends PHPUnitTestCase
     {
         return str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
     }
+
+    protected function assertPathSame(string $expected, string $actual): void
+    {
+        $this->assertSame($this->unifyDirectorySeparator($expected), $this->unifyDirectorySeparator($actual));
+    }
 }

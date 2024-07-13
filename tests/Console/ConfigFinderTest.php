@@ -19,7 +19,7 @@ final class ConfigFinderTest extends TestCase
 
         $actual = $sut->find($configPath, $this->rootDir());
 
-        $this->assertSame($configPath, $actual->getConfigPath());
+        $this->assertPathSame($configPath, $actual->getConfigPath());
     }
 
     #[Test]
@@ -29,7 +29,7 @@ final class ConfigFinderTest extends TestCase
 
         $actual = $sut->find('', $this->rootDir());
 
-        $this->assertSame($this->rootDir().'/.mare_scan.php', $actual->getConfigPath());
+        $this->assertPathSame($this->rootDir().'/.mare_scan.php', $actual->getConfigPath());
     }
 
     #[Test]
