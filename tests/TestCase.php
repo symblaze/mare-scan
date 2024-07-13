@@ -22,6 +22,11 @@ abstract class TestCase extends PHPUnitTestCase
         $this->faker = Factory::create();
     }
 
+    protected function rootDir(): string
+    {
+        return $this->unifyDirectorySeparator((string)realpath(__DIR__.'/..'));
+    }
+
     protected function fixture(string $path): string
     {
         $contents = file_get_contents($this->fixturePath($path));
