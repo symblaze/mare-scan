@@ -11,10 +11,9 @@ class ConfigFinder
     /**
      * @throws ConfigNotFoundException If the config file is not found
      */
-    public function find(IOInterface $input): Config
+    public function find(string $configOption, string $workDir): Config
     {
-        $configOption = (string)$input->getOption('config');
-        $configPath = empty($configOption) ? $input->workDirectory().'/.mare_scan.php' : $configOption;
+        $configPath = empty($configOption) ? $workDir.'/.mare_scan.php' : $configOption;
 
         if (! file_exists($configPath)) {
             throw ConfigNotFoundException::create($configPath);
