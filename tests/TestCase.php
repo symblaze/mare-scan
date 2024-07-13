@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Tests;
 
+use Faker\Factory;
+use Faker\Generator;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 /**
@@ -11,6 +13,20 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
+    protected Generator $faker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->faker = Factory::create();
+    }
+
+    protected function rootDir(): string
+    {
+        return $this->unifyDirectorySeparator((string)realpath(__DIR__.'/..'));
+    }
+
     protected function fixture(string $path): string
     {
         $contents = file_get_contents($this->fixturePath($path));
@@ -24,6 +40,16 @@ abstract class TestCase extends PHPUnitTestCase
         $realpath = realpath(__DIR__.'/fixtures/'.$path);
         assert(is_string($realpath), 'Fixture not found.');
 
-        return $realpath;
+        return $this->unifyDirectorySeparator($realpath);
+    }
+
+    private function unifyDirectorySeparator(string $path): string
+    {
+        return str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
+    }
+
+    protected function assertPathSame(string $expected, string $actual): void
+    {
+        $this->assertSame($this->unifyDirectorySeparator($expected), $this->unifyDirectorySeparator($actual));
     }
 }

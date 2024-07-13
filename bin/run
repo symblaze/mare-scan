@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Symblaze\MareScan\Console\ScanCommand;
+use Symfony\Component\Console\Application;
+
+require __DIR__.'/../vendor/autoload.php';
+
+$application = new Application('Mare scan', '1.0.0');
+
+$application->add(new ScanCommand());
+
+$application->run();
