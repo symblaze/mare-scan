@@ -79,8 +79,8 @@ final class Config
         return $this->phpVersion;
     }
 
-    public function getConfigPath(): ?string
+    public function getConfigPath(): string
     {
-        return $this->configPath;
+        return (string)$this->configPath;
     }
 }

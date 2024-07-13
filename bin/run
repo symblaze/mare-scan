@@ -10,6 +10,6 @@ require __DIR__.'/../vendor/autoload.php';
 
 $application = new Application('Mare scan', '1.0.0');
 
-$application->add(ScanCommand::create());
+$application->add(new ScanCommand());
 
 $application->run();

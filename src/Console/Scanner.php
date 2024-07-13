@@ -4,37 +4,58 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Console;
 
+use Iterator;
+use SplFileInfo;
 use Symblaze\MareScan\Analyzer\AnalyzerInterface;
 use Symblaze\MareScan\Analyzer\Issue;
 use Symfony\Component\Console\Helper\ProgressBar;
 
-final class Scanner
+final readonly class Scanner
 {
-    /** @return array<int, Issue[]> */
-    public function scan(Config $config, ProgressBar $progressBar): array
-    {
-        $files = $config->getFinder()->getIterator();
-        $analyzer = $config->getAnalyzer();
-        $result = [];
+    public function __construct(
+        private AnalyzerInterface $analyzer,
+        private ProgressBar $progressBar
+    ) {
+    }
 
-        $progressBar->start();
+    /**
+     * @param Iterator<SplFileInfo> $files
+     *
+     * @return array<string, Issue[]>
+     */
+    public function scan(Iterator $files): array
+    {
+        $this->setUpProgressBar(iterator_count($files));
+
+        $result = [];
+        $this->progressBar->start();
         foreach ($files as $file) {
-            $result[] = $this->scanFile($file, $analyzer, $progressBar);
+            $issues = $this->scanFile($file);
+            if (empty($issues)) {
+                continue;
+            }
+            $result[$file->getPathname()] = $this->scanFile($file);
         }
 
-        $progressBar->finish();
+        $this->progressBar->finish();
 
         return $result;
     }
 
-    private function scanFile(
-        mixed $file,
-        AnalyzerInterface $analyzer,
-        ProgressBar $progressBar
-    ): array {
-        $result = $analyzer->analyze(['path' => $file->getPathname()]);
-        $progressBar->advance();
+    /**
+     * @return Issue[]
+     */
+    private function scanFile(SplFileInfo $file): array
+    {
+        $result = $this->analyzer->analyze(['path' => $file->getPathname()]);
+        $this->progressBar->advance();
 
         return $result;
+    }
+
+    private function setUpProgressBar(int $max): void
+    {
+        $this->progressBar->setMaxSteps($max);
+        $this->progressBar->setFormat(' %bar% ');
     }
 }
