@@ -4,31 +4,25 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Console;
 
-use RuntimeException;
-use Symfony\Component\Console\Input\InputInterface;
+use Symblaze\MareScan\Exception\ConfigNotFoundException;
 
 class ConfigFinder
 {
-    public function find(InputInterface $input): Config
+    /**
+     * @throws ConfigNotFoundException If the config file is not found
+     */
+    public function find(IOInterface $input): Config
     {
-        $path = $input->getOption('config');
-        assert(is_null($path) || is_string($path));
+        $configOption = (string)$input->getOption('config');
+        $configPath = empty($configOption) ? $input->workDirectory().'/.mare_scan.php' : $configOption;
 
-        if (is_null($path)) {
-            // $path = getcwd().'/mare-scan.php';
-            throw new RuntimeException('Config file not found');
+        if (! file_exists($configPath)) {
+            throw ConfigNotFoundException::create($configPath);
         }
 
-        if (file_exists($path)) {
-            $config = require $path;
+        $config = require $configPath;
+        assert($config instanceof Config);
 
-            if (! ($config instanceof Config)) {
-                throw new RuntimeException('Invalid config file');
-            }
-
-            return $config;
-        }
-
-        throw new RuntimeException('Config file not found');
+        return $config;
     }
 }
