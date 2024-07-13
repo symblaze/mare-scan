@@ -36,7 +36,7 @@ final class Config
 
     public function getAnalyzer(): AnalyzerInterface
     {
-        if (!is_null($this->analyzer)) {
+        if (! is_null($this->analyzer)) {
             return $this->analyzer;
         }
 
