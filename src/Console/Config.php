@@ -18,13 +18,21 @@ final class Config
 
     public function __construct(
         private ?Finder $finder = null,
-        private ?AnalyzerInterface $analyzer = null
+        private ?AnalyzerInterface $analyzer = null,
+        private ?string $configPath = null
     ) {
     }
 
     public static function create(): self
     {
-        return new self();
+        $config = new self();
+
+        $trace = debug_backtrace();
+        assert(isset($trace[0]['file']));
+        $caller = $trace[0]['file'];
+        $config->configPath = $caller;
+
+        return $config;
     }
 
     public function getFinder(): Finder
@@ -69,5 +77,10 @@ final class Config
     public function getPhpVersion(): string
     {
         return $this->phpVersion;
+    }
+
+    public function getConfigPath(): ?string
+    {
+        return $this->configPath;
     }
 }

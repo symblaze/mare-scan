@@ -58,4 +58,12 @@ final class ConfigTest extends TestCase
         $this->assertSame($randomVersion, $config->getPhpVersion());
         $this->assertSame($randomVersion, $config->getParser()->targetVersion());
     }
+
+    #[Test]
+    public function get_where_it_was_created(): void
+    {
+        $config = Config::create();
+
+        $this->assertSame(__FILE__, $config->getConfigPath());
+    }
 }
