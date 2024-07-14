@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Symblaze\MareScan\Console;
 
 use Symblaze\Console\Command;
-use Symblaze\MareScan\Analyzer\FileAnalyzer;
-use Symblaze\MareScan\Analyzer\Issue;
+use Symblaze\MareScan\Config\Config;
 use Symblaze\MareScan\Exception\ConfigNotFoundException;
+use Symblaze\MareScan\Inspector\CodeIssue;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +23,24 @@ final class ScanCommand extends Command
     {
         try {
             $config = $this->findConfiguration($input);
-            $result = $this->scanFiles($config);
+
+            $this->comment('MareScan is scanning your project...');
+            $this->newLine();
+
+            $progressBar = $this->createProgressBar($config->getFinder()->count());
+            assert($progressBar instanceof ProgressBar);
+            $progressBar->start();
+
+            $result = (new Scanner())->scan(
+                $config->getFinder()->getIterator(),
+                $config->getInspectors(),
+                $config->getParser(),
+                function () use ($progressBar): void {
+                    $progressBar->advance();
+                }
+            );
+
+            $progressBar->finish();
 
             return empty($result) ? $this->exitSuccess() : $this->exitError($result);
         } catch (ConfigNotFoundException $e) {
@@ -41,21 +58,6 @@ final class ScanCommand extends Command
         return (new ConfigFinder())->find($configOption, $workDir);
     }
 
-    /**
-     * @return array<string, Issue[]>
-     */
-    private function scanFiles(Config $config): array
-    {
-        $this->comment('MareScan is scanning your project...');
-        $this->newLine();
-
-        $progressBar = $this->createProgressBar();
-        assert($progressBar instanceof ProgressBar);
-        $analyzer = new FileAnalyzer($config->getParser());
-
-        return (new Scanner($analyzer, $progressBar))->scan($config->getFinder()->getIterator());
-    }
-
     private function exitSuccess(): int
     {
         $this->newLine(2);
@@ -65,7 +67,7 @@ final class ScanCommand extends Command
     }
 
     /**
-     * @param array<string, Issue[]> $result
+     * @param array<string, CodeIssue[]> $result
      */
     private function exitError(array $result): int
     {
@@ -78,9 +80,6 @@ final class ScanCommand extends Command
         return self::FAILURE;
     }
 
-    /**
-     * @param array<string, Issue[]> $result
-     */
     private function displayIssues(array $result): void
     {
         foreach ($result as $issues) {
@@ -92,13 +91,22 @@ final class ScanCommand extends Command
         }
     }
 
-    private function displayIssue(Issue $issue): void
+    private function displayIssue(CodeIssue $issue): void
     {
-        $displayMethod = 'error' === $issue->severity() ? 'error' : 'warning';
-        $title = $issue->severity().': '.$issue->message();
+        // Title
+        $displayMethod = 'error' === $issue->getSeverity() ? 'error' : 'warning';
+        $title = strtoupper($issue->getSeverity()).': '.$issue->getMessage();
         $this->output->$displayMethod($title);
 
-        $at = 'at: '.$issue->file();
+        // at:
+        $at = sprintf(
+            'at: %s:%s',
+            $issue->getCodeLocation()->filePath,
+            $issue->getCodeLocation()->lineNumber,
+        );
         $this->output->info($at);
+
+        // Short message
+        $this->comment($issue->getShortMessage());
     }
 }

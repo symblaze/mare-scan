@@ -6,8 +6,8 @@ namespace Symblaze\MareScan\Tests\Console;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use Symblaze\MareScan\Console\Config;
-use Symblaze\MareScan\Console\Finder;
+use Symblaze\MareScan\Config\Config;
+use Symblaze\MareScan\Config\Finder;
 use Symblaze\MareScan\Tests\TestCase;
 
 #[CoversClass(Config::class)]

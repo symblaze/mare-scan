@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Console;
 
+use Symblaze\MareScan\Config\Config;
 use Symblaze\MareScan\Exception\ConfigNotFoundException;
 
 class ConfigFinder

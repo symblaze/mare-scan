@@ -6,56 +6,54 @@ namespace Symblaze\MareScan\Console;
 
 use Iterator;
 use SplFileInfo;
-use Symblaze\MareScan\Analyzer\AnalyzerInterface;
-use Symblaze\MareScan\Analyzer\Issue;
-use Symfony\Component\Console\Helper\ProgressBar;
+use Symblaze\MareScan\Inspector\InspectorInterface;
+use Symblaze\MareScan\Parser\ParserInterface;
 
 final readonly class Scanner
 {
-    public function __construct(
-        private AnalyzerInterface $analyzer,
-        private ProgressBar $progressBar
-    ) {
-    }
-
     /**
      * @param Iterator<SplFileInfo> $files
-     *
-     * @return array<string, Issue[]>
+     * @param InspectorInterface[]  $inspectors
      */
-    public function scan(Iterator $files): array
-    {
-        $this->setUpProgressBar(iterator_count($files));
-
+    public function scan(
+        Iterator $files,
+        array $inspectors,
+        ParserInterface $parser,
+        ?callable $eachFileCallback = null
+    ): array {
         $result = [];
-        $this->progressBar->start();
-        foreach ($files as $file) {
-            $issues = $this->scanFile($file);
-            if (empty($issues)) {
-                continue;
-            }
-            $result[$file->getPathname()] = $this->scanFile($file);
-        }
 
-        $this->progressBar->finish();
+        foreach ($files as $fileInfo) {
+            $result[$fileInfo->getPathname()] = $this->inspectFile(
+                $fileInfo,
+                $inspectors,
+                $parser,
+                $eachFileCallback
+            );
+        }
 
         return $result;
     }
 
     /**
-     * @return Issue[]
+     * @param array<InspectorInterface> $inspectors
      */
-    private function scanFile(SplFileInfo $file): array
-    {
-        $result = $this->analyzer->analyze(['path' => $file->getPathname()]);
-        $this->progressBar->advance();
+    private function inspectFile(
+        SplFileInfo $file,
+        array $inspectors,
+        ParserInterface $parser,
+        ?callable $callback = null
+    ): array {
+        $result = [];
+
+        foreach ($inspectors as $inspector) {
+            $result = $inspector->inspect($parser, $file);
+        }
+
+        if (null !== $callback) {
+            $callback($file, $result);
+        }
 
         return $result;
-    }
-
-    private function setUpProgressBar(int $max): void
-    {
-        $this->progressBar->setMaxSteps($max);
-        $this->progressBar->setFormat(' %bar% ');
     }
 }
