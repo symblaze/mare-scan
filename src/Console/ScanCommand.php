@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'scan {--c|config=}', description: 'Scan the project for potential issues')]
 final class ScanCommand extends Command implements ConsoleOutput
 {
-    use OutputHelpers;
+    use ConsoleHelpers;
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

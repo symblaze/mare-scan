@@ -9,7 +9,7 @@ use Symblaze\Console\Command;
 /**
  * @mixin Command
  */
-trait OutputHelpers
+trait ConsoleHelpers
 {
     public function newLine(int $count = 1): void
     {
