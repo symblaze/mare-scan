@@ -8,8 +8,6 @@ use PhpParser\Node\Stmt;
 
 interface ParserInterface
 {
-    public function targetVersion(): string;
-
     /**
      * @return Stmt[]
      */

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Console;
+namespace Symblaze\MareScan\Config;
 
-use Symblaze\MareScan\Analyzer\AnalyzerInterface;
-use Symblaze\MareScan\Analyzer\FileAnalyzer;
+use Symblaze\MareScan\Inspector\InspectorInterface;
 use Symblaze\MareScan\Parser\ParserBuilder;
 use Symblaze\MareScan\Parser\ParserInterface;
 
@@ -18,7 +17,6 @@ final class Config
 
     public function __construct(
         private ?Finder $finder = null,
-        private ?AnalyzerInterface $analyzer = null,
         private ?string $configPath = null
     ) {
     }
@@ -42,20 +40,17 @@ final class Config
         return $this->finder;
     }
 
-    public function getAnalyzer(): AnalyzerInterface
-    {
-        if (! is_null($this->analyzer)) {
-            return $this->analyzer;
-        }
-
-        $this->analyzer = new FileAnalyzer($this->getParser());
-
-        return $this->analyzer;
-    }
-
     public function getParser(): ParserInterface
     {
         return ParserBuilder::init()->targetVersion($this->getPhpVersion())->build();
+    }
+
+    /**
+     * @return array<InspectorInterface>
+     */
+    public function getInspectors(): array
+    {
+        return (new InspectorGenerator())->all();
     }
 
     public function __call(string $name, array $arguments): self

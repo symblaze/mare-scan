@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Tests\Parser;
+namespace Symblaze\MareScan\Tests\Console;
 
 use Symblaze\MareScan\Tests\MarkTestSkipped;
 use Symblaze\MareScan\Tests\TestCase;
 
-/**
- * @covers \Symblaze\MareScan\Parser\Parser
- */
-final class ParserTest extends TestCase
+final class ScanCommandTest extends TestCase
 {
     use MarkTestSkipped;
 }

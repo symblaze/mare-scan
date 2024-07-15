@@ -6,18 +6,18 @@ namespace Symblaze\MareScan\Inspector\TypeCompatibility;
 
 use PhpParser\Node\DeclareItem;
 use PhpParser\Node\Scalar\Int_;
-use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Declare_;
-use Symblaze\MareScan\Exception\InspectionError;
+use SplFileInfo;
+use Symblaze\MareScan\Inspector\CodeIssue;
+use Symblaze\MareScan\Inspector\CodeLocation;
 use Symblaze\MareScan\Inspector\InspectorInterface;
+use Symblaze\MareScan\Parser\ParserInterface;
 
 final readonly class MissingDeclareStrictTypesInspector implements InspectorInterface
 {
     private const string MESSAGE = 'Strict types declaration is missing';
-
-    public function __construct(private ?Stmt $stmt = null)
-    {
-    }
+    private const string SHORT_MESSAGE = 'District type declaration helps to avoid unexpected type coercion and improve code quality.';
+    private const string ISSUE_TYPE = 'MissingDeclareStrictTypes';
 
     public function name(): string
     {
@@ -26,35 +26,59 @@ final readonly class MissingDeclareStrictTypesInspector implements InspectorInte
 
     public function description(): string
     {
-        return <<<README
-Detects the missing declare(strict_types=1) directive in the file.
-
-See Strict typing [(php.net)](https://www.php.net/manual/en/language.types.declarations.php#language.types.declarations.strict) to learn more about why you may need use this directive.
-README;
+        return 'Detects the missing declare(strict_types=1) directive in the file.';
     }
 
-    public function inspect(): void
+    public function inspect(ParserInterface $parser, SplFileInfo $file): array
     {
-        if (! $this->stmt instanceof Declare_) {
-            throw InspectionError::warning(self::MESSAGE);
+        try {
+            $stmts = $parser->parse($file->getRealPath());
+        } catch (CodeIssue $syntaxError) {
+            return [$syntaxError];
         }
 
-        $declares = $this->stmt->declares;
+        if (! isset($stmts[0])) {
+            return [];
+        }
+
+        $statement = $stmts[0];
+        $codeLocation = new CodeLocation(
+            filePath: $file->getRealPath(),
+            fileName: $file->getFilename(),
+            lineNumber: $statement->getStartLine(),
+            columnNumber: 1,
+            endLineNumber: $statement->getEndLine(),
+        );
+        $codeIssue = new CodeIssue(
+            message: self::MESSAGE,
+            severity: CodeIssue::SEVERITY_WARNING,
+            codeLocation: $codeLocation,
+            type: self::ISSUE_TYPE,
+            shortMessage: self::SHORT_MESSAGE
+        );
+
+        if (! $statement instanceof Declare_) {
+            return [$codeIssue];
+        }
+
+        $declares = $statement->declares;
         if (! isset($declares[0]) || ! $declares[0] instanceof DeclareItem) {
-            throw InspectionError::warning(self::MESSAGE);
+            return [$codeIssue];
         }
 
         $declaration = $declares[0];
         if ('strict_types' !== $declaration->key->name) {
-            throw InspectionError::warning(self::MESSAGE);
+            return [$codeIssue];
         }
 
         if (! $declaration->value instanceof Int_) {
-            throw InspectionError::warning(self::MESSAGE);
+            return [$codeIssue];
         }
 
         if (1 !== $declaration->value->value) {
-            throw InspectionError::warning(self::MESSAGE);
+            return [$codeIssue];
         }
+
+        return [];
     }
 }
