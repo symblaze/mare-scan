@@ -8,6 +8,8 @@ use Symblaze\Console\Command;
 use Symblaze\MareScan\Config\Config;
 use Symblaze\MareScan\Exception\ConfigNotFoundException;
 use Symblaze\MareScan\Inspector\CodeIssue;
+use Symblaze\MareScan\Reporter\Display;
+use Symblaze\MareScan\Reporter\OutputInterface as ConsoleOutput;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @psalm-suppress PropertyNotSetInConstructor - The properties are set in the run method.
  */
 #[AsCommand(name: 'scan {--c|config=}', description: 'Scan the project for potential issues')]
-final class ScanCommand extends Command
+final class ScanCommand extends Command implements ConsoleOutput
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -71,42 +73,38 @@ final class ScanCommand extends Command
      */
     private function exitError(array $result): int
     {
-        $this->newLine(2);
-        $this->error(sprintf('Found %d issue(s):', count($result)));
-        $this->newLine();
-
-        $this->displayIssues($result);
+        (new Display($this))->report($result);
 
         return self::FAILURE;
     }
 
-    private function displayIssues(array $result): void
+    public function newLine(int $count = 1): void
     {
-        foreach ($result as $issues) {
-            foreach ($issues as $issue) {
-                $this->displayIssue($issue);
-            }
-
-            $this->output->newLine();
-        }
+        $this->output->newLine($count);
     }
 
-    private function displayIssue(CodeIssue $issue): void
+    public function error(string|array $message): void
     {
-        // Title
-        $displayMethod = 'error' === $issue->getSeverity() ? 'error' : 'warning';
-        $title = strtoupper($issue->getSeverity()).': '.$issue->getMessage();
-        $this->output->$displayMethod($title);
+        $this->output->error($message);
+    }
 
-        // at:
-        $at = sprintf(
-            'at: %s:%s',
-            $issue->getCodeLocation()->filePath,
-            $issue->getCodeLocation()->lineNumber,
-        );
-        $this->output->info($at);
+    public function warning(string|array $message): void
+    {
+        $this->output->warning($message);
+    }
 
-        // Short message
-        $this->comment($issue->getShortMessage());
+    public function info(string|array $message): void
+    {
+        $this->output->info($message);
+    }
+
+    public function comment(string|array $message): void
+    {
+        $this->output->comment($message);
+    }
+
+    public function table(array $headers, array $rows): void
+    {
+        $this->output->table($headers, $rows);
     }
 }

@@ -6,6 +6,7 @@ namespace Symblaze\MareScan\Console;
 
 use Iterator;
 use SplFileInfo;
+use Symblaze\MareScan\Inspector\CodeIssue;
 use Symblaze\MareScan\Inspector\InspectorInterface;
 use Symblaze\MareScan\Parser\ParserInterface;
 
@@ -14,6 +15,8 @@ final readonly class Scanner
     /**
      * @param Iterator<SplFileInfo> $files
      * @param InspectorInterface[]  $inspectors
+     *
+     * @return array<string, CodeIssue[]>
      */
     public function scan(
         Iterator $files,
@@ -37,6 +40,8 @@ final readonly class Scanner
 
     /**
      * @param array<InspectorInterface> $inspectors
+     *
+     * @return array<CodeIssue>
      */
     private function inspectFile(
         SplFileInfo $file,
