@@ -45,9 +45,10 @@ final readonly class Display implements ReporterInterface
     private function at(CodeIssue $issue): void
     {
         $at = sprintf(
-            'at: %s:%s',
+            'at: %s:%s:%s',
             $issue->getCodeLocation()->filePath,
             $issue->getCodeLocation()->lineNumber,
+            $issue->getCodeLocation()->columnNumber,
         );
         $this->output->info($at);
     }
