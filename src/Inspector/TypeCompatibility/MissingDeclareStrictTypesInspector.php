@@ -19,10 +19,6 @@ final readonly class MissingDeclareStrictTypesInspector implements InspectorInte
     private const string SHORT_MESSAGE = 'District type declaration helps to avoid unexpected type coercion and improve code quality.';
     private const string ISSUE_TYPE = 'MissingDeclareStrictTypes';
 
-    public function __construct()
-    {
-    }
-
     public function name(): string
     {
         return 'Missing declare strict types';
