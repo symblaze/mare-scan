@@ -51,8 +51,14 @@ final readonly class Scanner
     ): array {
         $result = [];
 
+        try {
+            $statements = $parser->parse($file->getRealPath());
+        } catch (CodeIssue $syntaxError) {
+            return [$syntaxError];
+        }
+
         foreach ($inspectors as $inspector) {
-            $result = $inspector->inspect($parser, $file);
+            $result = $inspector->inspect($file, ...$statements);
         }
 
         if (null !== $callback) {

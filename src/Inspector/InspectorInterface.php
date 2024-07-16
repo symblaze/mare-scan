@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Symblaze\MareScan\Inspector;
 
+use PhpParser\Node\Stmt;
 use SplFileInfo;
-use Symblaze\MareScan\Parser\ParserInterface;
 
 interface InspectorInterface
 {
     /**
      * @return CodeIssue[]
      */
-    public function inspect(ParserInterface $parser, SplFileInfo $file): array;
+    public function inspect(SplFileInfo $file, Stmt $statement): array;
 
     public function name(): string;
 
