@@ -6,7 +6,10 @@ namespace Symblaze\MareScan\Tests;
 
 use Faker\Factory;
 use Faker\Generator;
+use PhpParser\Node\Stmt;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use SplFileInfo;
+use Symblaze\MareScan\Parser\ParserBuilder;
 
 /**
  * All unit tests should extend this class.
@@ -35,6 +38,11 @@ abstract class TestCase extends PHPUnitTestCase
         return $contents;
     }
 
+    protected function fixtureInfo(string $path): SplFileInfo
+    {
+        return new SplFileInfo($this->fixturePath($path));
+    }
+
     protected function fixturePath(string $path): string
     {
         $realpath = realpath(__DIR__.'/fixtures/'.$path);
@@ -51,5 +59,13 @@ abstract class TestCase extends PHPUnitTestCase
     protected function assertPathSame(string $expected, string $actual): void
     {
         $this->assertSame($this->unifyDirectorySeparator($expected), $this->unifyDirectorySeparator($actual));
+    }
+
+    /**
+     * @return Stmt[]
+     */
+    protected function parse(SplFileInfo $file): array
+    {
+        return ParserBuilder::init()->build()->parse($file);
     }
 }

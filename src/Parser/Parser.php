@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symblaze\MareScan\Parser;
 
 use PhpParser\Error;
+use SplFileInfo;
 use Symblaze\MareScan\Inspector\CodeIssue;
 
 final readonly class Parser implements ParserInterface
@@ -20,15 +21,15 @@ final readonly class Parser implements ParserInterface
         return $this->targetVersion;
     }
 
-    public function parse(string $code): array
+    public function parse(SplFileInfo $fileInfo): array
     {
-        $filePath = $code;
-        $code = (string)file_get_contents($filePath);
+        $code = file_get_contents($fileInfo->getRealPath());
+        assert(is_string($code));
 
         try {
             return (array)$this->parser->parse($code);
         } catch (Error $e) {
-            throw CodeIssue::fromParserError($e, $filePath, $code);
+            throw CodeIssue::fromParserError($e, $fileInfo, $code);
         }
     }
 }

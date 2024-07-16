@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Symblaze\MareScan\Config;
 
 use Symblaze\MareScan\Inspector\InspectorInterface;
-use Symblaze\MareScan\Inspector\TypeCompatibility\MissingDeclareStrictTypesInspector;
+use Symblaze\MareScan\Inspector\TypeCompatibility\MissingStrictTypesDeclarationInspector;
 
 final class InspectorGenerator
 {
     private const array INSPECTORS = [
-        MissingDeclareStrictTypesInspector::class,
+        MissingStrictTypesDeclarationInspector::class,
     ];
 
     /**
