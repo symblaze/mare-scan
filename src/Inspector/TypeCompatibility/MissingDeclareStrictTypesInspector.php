@@ -6,12 +6,12 @@ namespace Symblaze\MareScan\Inspector\TypeCompatibility;
 
 use PhpParser\Node\DeclareItem;
 use PhpParser\Node\Scalar\Int_;
+use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Declare_;
 use SplFileInfo;
 use Symblaze\MareScan\Inspector\CodeIssue;
 use Symblaze\MareScan\Inspector\CodeLocation;
 use Symblaze\MareScan\Inspector\InspectorInterface;
-use Symblaze\MareScan\Parser\ParserInterface;
 
 final readonly class MissingDeclareStrictTypesInspector implements InspectorInterface
 {
@@ -29,19 +29,13 @@ final readonly class MissingDeclareStrictTypesInspector implements InspectorInte
         return 'Detects the missing declare(strict_types=1) directive in the file.';
     }
 
-    public function inspect(ParserInterface $parser, SplFileInfo $file): array
+    public function inspect(SplFileInfo $file, Stmt ...$statement): array
     {
-        try {
-            $stmts = $parser->parse($file->getRealPath());
-        } catch (CodeIssue $syntaxError) {
-            return [$syntaxError];
-        }
-
-        if (! isset($stmts[0])) {
+        if (! isset($statement[0])) {
             return [];
         }
 
-        $statement = $stmts[0];
+        $statement = $statement[0];
         $codeLocation = new CodeLocation(
             filePath: $file->getRealPath(),
             fileName: $file->getFilename(),
