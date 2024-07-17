@@ -14,6 +14,7 @@ class CodeLocationTest extends TestCase
     #[Test]
     public function create_from_parser_error(): void
     {
+        $this->skipOnWindows();
         $fixture = 'misc/syntax_error.stub';
         $fileInfo = $this->fixtureInfo($fixture);
         $error = new Error($this->faker->sentence(), [

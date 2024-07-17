@@ -68,4 +68,11 @@ abstract class TestCase extends PHPUnitTestCase
     {
         return ParserBuilder::init()->build()->parse($file);
     }
+
+    protected function skipOnWindows(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('Test skipped on Windows.');
+        }
+    }
 }
