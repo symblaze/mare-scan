@@ -8,7 +8,7 @@ use PhpParser\Error;
 use SplFileInfo;
 use Symblaze\MareScan\Exception\MareScanException;
 
-final class CodeIssue extends MareScanException
+class CodeIssue extends MareScanException
 {
     public const int SEVERITY_ERROR = 1;
     public const int SEVERITY_WARNING = 2;
@@ -29,7 +29,7 @@ final class CodeIssue extends MareScanException
             message: $error->getMessage(),
             severity: self::SEVERITY_ERROR,
             codeLocation: CodeLocation::fromParserError($fileInfo, $error, $code),
-            type: 'SyntaxError',
+            type: 'syntax_error',
             shortMessage: $error->hasColumnInfo() ? $error->getMessageWithColumnInfo($code) : $error->getMessage(),
         );
     }

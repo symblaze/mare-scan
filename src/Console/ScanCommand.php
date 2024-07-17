@@ -10,6 +10,7 @@ use Symblaze\MareScan\Exception\ConfigNotFoundException;
 use Symblaze\MareScan\Inspector\CodeIssue;
 use Symblaze\MareScan\Reporter\Display;
 use Symblaze\MareScan\Reporter\OutputInterface as ConsoleOutput;
+use Symblaze\MareScan\Scanner\Scanner;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,31 +28,25 @@ final class ScanCommand extends Command implements ConsoleOutput
     {
         try {
             $config = $this->findConfiguration($input);
-
-            $this->comment('MareScan is scanning your project...');
-            $this->newLine();
-
-            $progressBar = $this->createProgressBar($config->getFinder()->count());
-            assert($progressBar instanceof ProgressBar);
-            $progressBar->start();
-
-            $result = (new Scanner())->scan(
-                $config->getFinder()->getIterator(),
-                $config->getInspectors(),
-                $config->getParser(),
-                function () use ($progressBar): void {
-                    $progressBar->advance();
-                }
-            );
-
-            $progressBar->finish();
-
-            return empty($result) ? $this->exitSuccess() : $this->exitError($result);
         } catch (ConfigNotFoundException $e) {
             $this->error($e->getMessage());
 
             return self::FAILURE;
         }
+
+        $this->comment('MareScan is scanning your project...');
+        $this->newLine();
+
+        $progressBar = $this->createProgressBar($config->getFinder()->count());
+        assert($progressBar instanceof ProgressBar);
+        $progressBar->start();
+
+        $scanner = Scanner::create($config, fn () => $progressBar->advance());
+        $result = $scanner->scan();
+
+        $progressBar->finish();
+
+        return empty($result) ? $this->exitSuccess() : $this->exitError($result);
     }
 
     private function findConfiguration(InputInterface $input): Config
