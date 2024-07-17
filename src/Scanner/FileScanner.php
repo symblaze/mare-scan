@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Inspector;
+namespace Symblaze\MareScan\Scanner;
 
 use Closure;
 use SplFileInfo;
+use Symblaze\MareScan\Inspector\CodeIssue;
+use Symblaze\MareScan\Inspector\InspectorInterface;
 use Symblaze\MareScan\Parser\ParserInterface;
 
 final readonly class FileScanner implements ScannerInterface

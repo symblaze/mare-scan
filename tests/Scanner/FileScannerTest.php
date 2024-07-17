@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Symblaze\MareScan\Tests\Inspector;
+namespace Symblaze\MareScan\Tests\Scanner;
 
 use PHPUnit\Framework\Attributes\Test;
 use Symblaze\MareScan\Inspector\CodeIssue;
-use Symblaze\MareScan\Inspector\FileScanner;
 use Symblaze\MareScan\Inspector\InspectorInterface;
 use Symblaze\MareScan\Parser\ParserBuilder;
+use Symblaze\MareScan\Scanner\FileScanner;
 use Symblaze\MareScan\Tests\TestCase;
 
 final class FileScannerTest extends TestCase
