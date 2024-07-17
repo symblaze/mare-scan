@@ -13,15 +13,19 @@ use Symblaze\MareScan\Inspector\CodeIssue;
 use Symblaze\MareScan\Inspector\CodeLocation;
 use Symblaze\MareScan\Inspector\InspectorInterface;
 
-final readonly class MissingDeclareStrictTypesInspector implements InspectorInterface
+final readonly class MissingStrictTypesDeclarationInspector implements InspectorInterface
 {
-    private const string MESSAGE = 'Strict types declaration is missing';
+    private const string MESSAGE = 'Strict types declaration is missing.';
     private const string SHORT_MESSAGE = 'District type declaration helps to avoid unexpected type coercion and improve code quality.';
-    private const string ISSUE_TYPE = 'MissingDeclareStrictTypes';
 
-    public function name(): string
+    public function shortName(): string
     {
-        return 'Missing declare strict types';
+        return 'missing_strict_types_declaration';
+    }
+
+    public function displayName(): string
+    {
+        return 'Missing strict types declaration';
     }
 
     public function description(): string
@@ -32,47 +36,43 @@ final readonly class MissingDeclareStrictTypesInspector implements InspectorInte
     public function inspect(SplFileInfo $file, Stmt ...$statement): array
     {
         if (! isset($statement[0])) {
-            return [];
+            return [$this->codeIssue($file)];
         }
 
         $statement = $statement[0];
-        $codeLocation = new CodeLocation(
-            filePath: $file->getRealPath(),
-            fileName: $file->getFilename(),
-            lineNumber: $statement->getStartLine(),
-            columnNumber: 1,
-            endLineNumber: $statement->getEndLine(),
-        );
-        $codeIssue = new CodeIssue(
-            message: self::MESSAGE,
-            severity: CodeIssue::SEVERITY_WARNING,
-            codeLocation: $codeLocation,
-            type: self::ISSUE_TYPE,
-            shortMessage: self::SHORT_MESSAGE
-        );
-
         if (! $statement instanceof Declare_) {
-            return [$codeIssue];
+            return [$this->codeIssue($file)];
         }
 
         $declares = $statement->declares;
         if (! isset($declares[0]) || ! $declares[0] instanceof DeclareItem) {
-            return [$codeIssue];
+            return [$this->codeIssue($file)];
         }
 
         $declaration = $declares[0];
         if ('strict_types' !== $declaration->key->name) {
-            return [$codeIssue];
+            return [$this->codeIssue($file)];
         }
 
         if (! $declaration->value instanceof Int_) {
-            return [$codeIssue];
+            return [$this->codeIssue($file)];
         }
 
         if (1 !== $declaration->value->value) {
-            return [$codeIssue];
+            return [$this->codeIssue($file)];
         }
 
         return [];
+    }
+
+    private function codeIssue(SplFileInfo $fileInfo): CodeIssue
+    {
+        return new CodeIssue(
+            message: self::MESSAGE,
+            severity: CodeIssue::SEVERITY_WARNING,
+            codeLocation: CodeLocation::atBeginningOfFile($fileInfo),
+            type: $this->shortName(),
+            shortMessage: self::SHORT_MESSAGE
+        );
     }
 }

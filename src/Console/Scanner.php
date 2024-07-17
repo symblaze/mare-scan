@@ -52,7 +52,7 @@ final readonly class Scanner
         $result = [];
 
         try {
-            $statements = $parser->parse($file->getRealPath());
+            $statements = $parser->parse($file);
         } catch (CodeIssue $syntaxError) {
             return [$syntaxError];
         }

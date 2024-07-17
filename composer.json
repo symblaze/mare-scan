@@ -36,7 +36,10 @@
   "autoload": {
     "psr-4": {
       "Symblaze\\MareScan\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symblaze\MareScan\Inspector;
 
 use PhpParser\Error;
+use SplFileInfo;
 use Symblaze\MareScan\Exception\MareScanException;
 
 final class CodeIssue extends MareScanException
@@ -22,24 +23,14 @@ final class CodeIssue extends MareScanException
         parent::__construct($message, $severity);
     }
 
-    public static function fromParserError(Error $error, string $filePath, string $code): self
+    public static function fromParserError(Error $error, SplFileInfo $fileInfo, string $code): self
     {
-        $formattedPath = self::unifyDirectorySeparator($filePath);
-
-        $codeLocation = new CodeLocation(
-            filePath: $formattedPath,
-            fileName: basename($formattedPath),
-            lineNumber: $error->getStartLine(),
-            columnNumber: $error->getStartColumn($code),
-            endLineNumber: $error->getEndLine(),
-        );
-
         return new self(
             message: $error->getMessage(),
             severity: self::SEVERITY_ERROR,
-            codeLocation: $codeLocation,
+            codeLocation: CodeLocation::fromParserError($fileInfo, $error, $code),
             type: 'SyntaxError',
-            shortMessage: $error->getMessageWithColumnInfo($code)
+            shortMessage: $error->hasColumnInfo() ? $error->getMessageWithColumnInfo($code) : $error->getMessage(),
         );
     }
 
@@ -65,10 +56,5 @@ final class CodeIssue extends MareScanException
             self::SEVERITY_WARNING => 'warning',
             default => 'unknown',
         };
-    }
-
-    private static function unifyDirectorySeparator(string $path): string
-    {
-        return str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $path);
     }
 }
