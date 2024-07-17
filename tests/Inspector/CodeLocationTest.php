@@ -27,7 +27,7 @@ class CodeLocationTest extends TestCase
 
         $codeLocation = CodeLocation::fromParserError($fileInfo, $error, $this->fixture($fixture));
 
-        $this->assertSame($fileInfo->getRealPath(), $codeLocation->filePath);
+        $this->assertPathSame($fileInfo->getRealPath(), $codeLocation->filePath);
         $this->assertSame('syntax_error.stub', $codeLocation->fileName);
         $this->assertSame(3, $codeLocation->lineNumber);
         $this->assertSame(6, $codeLocation->columnNumber);
