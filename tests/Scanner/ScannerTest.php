@@ -26,7 +26,9 @@ final class ScannerTest extends TestCase
         $this->assertCount(2, $result);
         $issue1 = reset($result)[0];
         $issue2 = end($result)[0];
-        $this->assertSame('missing_strict_types_declaration', $issue1->getType());
-        $this->assertSame('syntax_error', $issue2->getType());
+        $this->assertEqualsCanonicalizing(
+            ['missing_strict_types_declaration', 'syntax_error'],
+            [$issue1->getType(), $issue2->getType()]
+        );
     }
 }
