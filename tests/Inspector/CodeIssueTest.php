@@ -23,7 +23,7 @@ class CodeIssueTest extends TestCase
         $codeIssue = CodeIssue::fromParserError($error, $fileInfo, $code);
 
         $this->assertEquals(CodeLocation::fromParserError($fileInfo, $error, $code), $codeIssue->getCodeLocation());
-        $this->assertEquals('SyntaxError', $codeIssue->getType());
+        $this->assertEquals('syntax_error', $codeIssue->getType());
         $this->assertEquals($error->getMessage(), $codeIssue->getShortMessage());
         $this->assertEquals('error', $codeIssue->getSeverity());
     }
