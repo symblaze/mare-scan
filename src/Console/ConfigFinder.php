@@ -14,7 +14,7 @@ class ConfigFinder
      */
     public function find(string $configOption, string $workDir): Config
     {
-        $configPath = empty($configOption) ? $workDir.'/.mare_scan.php' : $configOption;
+        $configPath = '' === $configOption ? $workDir.'/.mare_scan.php' : $configOption;
 
         if (! file_exists($configPath)) {
             throw ConfigNotFoundException::create($configPath);

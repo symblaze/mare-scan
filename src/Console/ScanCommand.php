@@ -46,7 +46,7 @@ final class ScanCommand extends Command implements ConsoleOutput
 
         $progressBar->finish();
 
-        return empty($result) ? $this->exitSuccess() : $this->exitError($result);
+        return 0 === count($result) ? $this->exitSuccess() : $this->exitError($result);
     }
 
     private function findConfiguration(InputInterface $input): Config
