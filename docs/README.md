@@ -30,7 +30,7 @@ vendor/bin/mare scan
 
 ## Code Style
 
-- Empty Function Usage `EmptyFunctionUsageInspector`
+- [Empty Function Usage](https://imdhemy.com/blog/php/better-alternatives-to-empty-in-php.html/) `EmptyFunctionUsageInspector`
 
 ## Type Compatibility
 
