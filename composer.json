@@ -15,10 +15,10 @@
     "psalm-t": "vendor/bin/psalm --no-cache --output-format=compact",
     "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
     "cs-fix": "php-cs-fixer fix --verbose",
-    "mare": "./bin/run scan"
+    "mare": "bin/mare scan"
   },
   "bin": [
-    "bin/run"
+    "bin/mare"
   ],
   "require": {
     "php": "^8.3",
