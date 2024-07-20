@@ -34,7 +34,10 @@ final readonly class FileScanner implements ScannerInterface
         }
 
         foreach ($inspectors as $inspector) {
-            $result = $inspector->inspect($file, ...$statements);
+            $codeIssues = $inspector->inspect($file, ...$statements);
+            if (0 !== count($codeIssues)) {
+                $result = $codeIssues;
+            }
         }
 
         $this->callback?->call($this, $file, $result);

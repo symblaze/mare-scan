@@ -26,7 +26,10 @@ final readonly class MultipleFileScanner implements ScannerInterface
         $result = [];
 
         foreach ($file as $fileInfo) {
-            $result[$fileInfo->getPathname()] = $this->fileScanner->scan($inspectors, $fileInfo);
+            $codeIssues = $this->fileScanner->scan($inspectors, $fileInfo);
+            if (0 !== count($codeIssues)) {
+                $result[$fileInfo->getPathname()] = $codeIssues;
+            }
         }
 
         return $result;
