@@ -25,3 +25,13 @@ Then you can run MareScan using the following command:
 ```bash
 vendor/bin/mare scan
 ```
+
+## Available Inspectors
+
+## Code Style
+
+- Empty Function Usage `EmptyFunctionUsageInspector`
+
+## Type Compatibility
+
+- Missing Strict Types declaration `MissingStrictTypesDeclarationInspector`
